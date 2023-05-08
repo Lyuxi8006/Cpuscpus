@@ -1,11 +1,9 @@
 #include "bmp.h"
-#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
 
 #ifdef _MSC_VER
-
 __pragma(pack(push, 1))
 struct bitmap_file_header_t
 {
