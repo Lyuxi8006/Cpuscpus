@@ -231,11 +231,11 @@ int read_bmpfile(const char* fileName, size_t* width, size_t* height, uint8_t** 
 		uint32_t a = p->rgbReserved;
 		if (i % 4 == 0 && i != 0)
 		{
-			printf("bgra (%u %u %u %u)\n", b, g, r, a);
+			// printf("bgra (%u %u %u %u)\n", b, g, r, a);
 		}
 		else
 		{
-			printf("bgra (%u %u %u %u) ", b, g, r, a);
+			// printf("bgra (%u %u %u %u) ", b, g, r, a);
 		}
 	}
 
