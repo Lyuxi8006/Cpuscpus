@@ -352,7 +352,7 @@ int write_bmpfile(const char* fileName, size_t width, size_t height, uint8_t* pi
 	memset(info_header, 0, sizeof(bitmap_info_header_t));
 	info_header->headerSize = sizeof(bitmap_info_header_t);
 	info_header->width = width;
-	info_header->height = height;
+	info_header->height = (~height + 1);
 	info_header->colorPlanes = 1;
 	info_header->bitsPerPixel = 8;
 	info_header->imageDataSize = 0;
