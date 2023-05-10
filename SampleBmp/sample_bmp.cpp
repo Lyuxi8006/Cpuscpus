@@ -81,6 +81,7 @@ int main()
 
 	size_t width = 0;
 	size_t height = 0;
+	float cmPerPixel = 0.00f;
 	uint8_t* pixels = nullptr;
 	//int res = read_bmpfile(r_file_name.c_str(), &width, &height, &pixels);
 
@@ -95,7 +96,7 @@ int main()
 		{
 			continue;
 		}
-		int res = read_data(data_file_name.c_str(), &width, &height, &pixels);
+		int res = read_data(data_file_name.c_str(), &width, &height, &cmPerPixel, &pixels);
 		if (res == 0)
 		{
 			std::string bmp_file = data_file_name + ".bmp";

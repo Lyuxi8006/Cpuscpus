@@ -107,7 +107,7 @@ struct palette_t
 #endif
 
 
-int read_data(const char* fileName, size_t* width, size_t* height, uint8_t** pixels)
+int read_data(const char* fileName, size_t* width, size_t* height, float * cmPerPixel, uint8_t** pixels)
 {
 	FILE* fp = fopen(fileName, "rb");
 	if (fp == nullptr)
@@ -132,10 +132,11 @@ int read_data(const char* fileName, size_t* width, size_t* height, uint8_t** pix
 
 	size_t _height = *(int32_t*)buffer;
 	size_t _width = *(int32_t*)(buffer + 4);
+	float _cmPerPixel = *(float*)(buffer + 6);
 
 	size_t total_size = _height * _width;
 
-	if (total_size + 8 != file_size)
+	if (total_size + 10 != file_size)
 	{
 
 		free(buffer);
@@ -164,12 +165,13 @@ int read_data(const char* fileName, size_t* width, size_t* height, uint8_t** pix
 	//	}
 	//}
 
-	memcpy(_pixels, &buffer[8], _width * _height);
+	memcpy(_pixels, &buffer[10], _width * _height);
 
 
 
 	*width = _width;
 	*height = _height;
+	*cmPerPixel = _cmPerPixel;
 	*pixels = _pixels;
 	free(buffer);
 	buffer = nullptr;
