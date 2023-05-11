@@ -107,7 +107,49 @@ struct palette_t
 #endif
 
 
-int read_data(const char* fileName, size_t* width, size_t* height, float * cmPerPixel, uint8_t** pixels)
+
+void draw_line(int sx, int sy, int dx, int dy, uint8_t color, uint8_t* pixels, int lpitch)
+{
+
+	int deta_x = dx - sx;
+	int deta_y = dy - sy;
+
+	int sign_x = deta_x > 0 ? 1 : -1;
+	int sign_y = deta_y > 0 ? 1 : -1;
+
+
+	int x = sx;
+	int y = sy;
+
+	for (int ix = 0, iy = 0; ix < deta_x || iy < deta_y;)
+	{
+
+		//这里(0.5)表示像素中间
+		//if ((0.5 + ix) /deta_x < (0.5 + iy) / deta_y) 不等式两边同时乘以2 * deta_x * deta_y 去掉浮点数
+		int decision = (1 + 2 * ix) * deta_y - (1 + 2 * iy) * deta_x;
+		if (decision == 0)
+		{
+			x += sign_x;
+			y += sign_y;
+			ix++;
+			iy++;
+		}
+		else if (decision < 0)
+		{
+			x += sign_x;
+			ix++;
+		}
+		else
+		{
+			y += sign_y;
+			iy++;
+		}
+		pixels[x + y * lpitch] = color;
+	}
+}
+
+int read_data(const char* fileName, size_t* width, size_t* height, float* cmPerPixel, uint8_t** pixels,
+	int* sx, int* sy, int* dx, int* dy)
 {
 	FILE* fp = fopen(fileName, "rb");
 	if (fp == nullptr)
@@ -132,11 +174,15 @@ int read_data(const char* fileName, size_t* width, size_t* height, float * cmPer
 
 	size_t _height = *(int32_t*)buffer;
 	size_t _width = *(int32_t*)(buffer + 4);
-	float _cmPerPixel = *(float*)(buffer + 6);
+	int _sx = *(int*)(buffer + 8);
+	int _sy = *(int*)(buffer + 12);
+	int _dx = *(int*)(buffer + 16);
+	int _dy = *(int*)(buffer + 20);
+	float _cmPerPixel = *(float*)(buffer + 24);
 
 	size_t total_size = _height * _width;
 
-	if (total_size + 10 != file_size)
+	if (total_size + 28 != file_size)
 	{
 
 		free(buffer);
@@ -165,13 +211,17 @@ int read_data(const char* fileName, size_t* width, size_t* height, float * cmPer
 	//	}
 	//}
 
-	memcpy(_pixels, &buffer[10], _width * _height);
+	memcpy(_pixels, &buffer[28], _width * _height);
 
 
 
 	*width = _width;
 	*height = _height;
 	*cmPerPixel = _cmPerPixel;
+	*sx = _sx;
+	*sy = _sy;
+	*dx = _dx;
+	*dy = _dy;
 	*pixels = _pixels;
 	free(buffer);
 	buffer = nullptr;

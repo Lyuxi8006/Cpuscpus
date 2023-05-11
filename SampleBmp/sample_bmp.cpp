@@ -81,6 +81,10 @@ int main()
 
 	size_t width = 0;
 	size_t height = 0;
+	int sx = 0;
+	int sy = 0;
+	int dx = 0;
+	int dy = 0;
 	float cmPerPixel = 0.00f;
 	uint8_t* pixels = nullptr;
 	//int res = read_bmpfile(r_file_name.c_str(), &width, &height, &pixels);
@@ -96,9 +100,10 @@ int main()
 		{
 			continue;
 		}
-		int res = read_data(data_file_name.c_str(), &width, &height, &cmPerPixel, &pixels);
+		int res = read_data(data_file_name.c_str(), &width, &height, &cmPerPixel, &pixels, &sx, &sy, &dx, &dy);
 		if (res == 0)
 		{
+			draw_line(sx, sy, dx, dy, 255, pixels, width);
 			std::string bmp_file = data_file_name + ".bmp";
 			write_bmpfile(bmp_file.c_str(), width, height, pixels);
 			free(pixels);
