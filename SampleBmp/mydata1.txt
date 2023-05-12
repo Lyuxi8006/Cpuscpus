@@ -1,0 +1,3 @@
+strImageSize: height 650 width 980  cmPerPixel 0.0149711600
+AmnioticFluidInsideDimension: 4.52
+MeasureMarks: UpSidePoint(440,114) DownSidePoint(440,416) 
